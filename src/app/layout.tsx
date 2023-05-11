@@ -2,7 +2,7 @@ import "./styles/globals.css";
 import { Roboto_Slab } from "next/font/google";
 
 const roboto = Roboto_Slab({
-  weight: "400",
+  weight: "700",
   subsets: ["latin"],
   display: "swap",
 });
@@ -19,6 +19,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <title>Netflix</title>
       <body className={roboto.className}>{children}</body>
     </html>
   );
