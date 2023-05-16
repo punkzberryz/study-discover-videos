@@ -7,17 +7,25 @@ const imgPath =
 
 interface SectionCardsProps {
   title: string;
-  videos: { imgUrl: string }[];
+  videos: { imgUrl: string; id: string; title: string }[];
   size: "small" | "medium" | "large";
 }
 
-const SectionCards = ({ title, videos, size }: SectionCardsProps) => {
+const SectionCards = ({ title, videos = [], size }: SectionCardsProps) => {
   return (
     <section className={styles.container}>
       <h2 className={styles.title}>{title}</h2>
       <div className={styles.cardWrapper}>
         {videos.map((video, index) => {
-          return <Card id={index} imgUrl={video.imgUrl} size={size} />;
+          return (
+            <Card
+              key={video.id}
+              index={index}
+              title={video.title}
+              imgUrl={video.imgUrl}
+              size={size}
+            />
+          );
         })}
       </div>
     </section>

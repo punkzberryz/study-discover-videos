@@ -6,14 +6,15 @@ import cls from "classnames";
 
 import styles from "./card.module.css";
 interface CardProps {
-  id: number;
+  index: number;
+  title: string;
   imgUrl: string;
   size: "small" | "medium" | "large";
 }
 interface ClassMapProps {
   [key: string]: string;
 }
-const Card = ({ id, imgUrl, size }: CardProps) => {
+const Card = ({ index, title, imgUrl, size }: CardProps) => {
   const classMap: ClassMapProps = {
     large: styles.lgItem,
     medium: styles.mdItem,
@@ -27,7 +28,7 @@ const Card = ({ id, imgUrl, size }: CardProps) => {
     console.log("hi error");
   };
 
-  const scale = id === 0 ? { scaleY: 1.1 } : { scale: 1.1 };
+  const scale = index === 0 ? { scaleY: 1.1 } : { scale: 1.1 };
 
   return (
     <div className={styles.container}>
@@ -40,7 +41,7 @@ const Card = ({ id, imgUrl, size }: CardProps) => {
       >
         <Image
           src={imgSrc}
-          alt="image"
+          alt={title}
           fill={true}
           className={styles.cardImg}
           onError={handleOnImagePathError}

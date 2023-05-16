@@ -1,17 +1,34 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
 import styles from "./navbar.module.css";
+//data
+import { magic } from "../../../lib/magic-client";
 
 interface NavBarProps {
   username: string;
 }
-const NavBar = ({ username }: NavBarProps) => {
+const NavBar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [username, setUsername] = useState("");
   const router = useRouter();
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        if (magic) {
+          const { email, publicAddress } = await magic.user.getMetadata();
+          if (email) setUsername(email);
+        }
+      } catch {
+        // Handle errors if required!
+      }
+    };
+    getUser();
+  });
+
   const handleOnClickHome = (event: MouseEvent<HTMLElement>) => {
     event.preventDefault();
     router.push("/");
@@ -23,6 +40,18 @@ const NavBar = ({ username }: NavBarProps) => {
   const handleShowDropdown = (event: MouseEvent<HTMLElement>) => {
     event.preventDefault();
     setShowDropdown(!showDropdown);
+  };
+  const handleSignout = async (event: MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    try {
+      if (magic) {
+        await magic.user.logout();
+        console.log(await magic.user.isLoggedIn()); // => `false`
+        router.push("/login");
+      }
+    } catch (error) {
+      console.error("error retrieving email", error);
+    }
   };
   return (
     <div className={styles.container}>
@@ -62,7 +91,12 @@ const NavBar = ({ username }: NavBarProps) => {
             {showDropdown && (
               <div className={styles.navDropdown}>
                 <div>
-                  <Link href="/login" className={styles.linkName}>
+                  <Link
+                    href="/login"
+                    className={styles.linkName}
+                    // legacyBehavior
+                    onClick={handleSignout}
+                  >
                     Sign out
                   </Link>
                   <div className={styles.lineWrapper}></div>
